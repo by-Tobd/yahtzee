@@ -4,7 +4,7 @@ __pycache__
 # Unity folders and files
 ###
 [Aa]ssets/AssetStoreTools*
-[Bb]uild/
+Unity Project/[Bb]uild/
 [Ll]ibrary/
 [Ll]ocal[Cc]ache/
 [Oo]bj/
