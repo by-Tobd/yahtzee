@@ -98,3 +98,9 @@ gewürfelt. Sie hat nun vier Möglichkeiten:
     <li> 21 Punkte. Im unteren Teil in ihrem Kästchen für „Dreierpasch“
     <li> 25 Punkte. Im unteren Teil in ihrem Kästchen für „Full House“
 </ul>
+
+## Spielende
+Das Spiel endet, sobald das letzte Kästchen
+beim letzten Spieler ausgefüllt ist. 
+<br> Der Spieler mit den meisten Punkten
+ist der Sieger.
