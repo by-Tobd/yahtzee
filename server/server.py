@@ -43,7 +43,7 @@ class Server:
         self.players[id]["roll_times"] = 0
         self.players[id]["username"] = None
         self.players[id]["room"] = None
-        self.players[id]["final_score"] = None
+        self.players[id]["finished"] = None
         await websocket.send(json.dumps({"type":"player_id", "data":id}))
 
         # Prüft die Verbindung des Spielers.
@@ -109,7 +109,7 @@ class Server:
         """Trägt die Punkte eines Spielers ein und sendet den neuen Stand an alle.
         Wenn der Spieler noch nicht gerollt hat oder die Punkte nicht eintragen kann, wird ihm eine Wahnung geschickt."""
 
-        if self.players[sender_id]["final_score"]:
+        if self.players[sender_id]["finished"]:
             await self.send(sender_id, "warning", "finished")
             return
 
@@ -137,21 +137,21 @@ class Server:
 
 
         if -1 not in self.players[sender_id]["score"]:
-            data = {"player":sender_id,"uppersum":yahtzee.uppersum(self.players[sender_id]["score"])}
+            data = {"player":self.players[sender_id]["username"],"uppersum":yahtzee.uppersum(self.players[sender_id]["score"])}
             data["total"] = data["uppersum"] + yahtzee.lowersum(self.players[sender_id]["score"])
 
-            self.players[sender_id]["finished"] = data["uppersum"] + data["lowersum"]
-            await self.send(sender_id, "finished_update", data)
+            self.players[sender_id]["finished"] = data["total"]
+            await self.send(sender_id, "finish_update", data)
 
             room_name = self.players[sender_id]["room"]
-            room_scores = [self.players[id]["final_score"] for id in self.rooms[room_name]["players"]]
+            room_scores = [self.players[id]["finished"] for id in self.rooms[room_name]["players"]]
             if None not in room_scores:
                 winner_score = max(room_scores)
                 for id in self.rooms[room_name]["players"]:
-                    if self.players[id]["final_score"] == winner_score:
+                    if self.players[id]["finished"] == winner_score:
                         winner = self.players[id]["username"]
                 for id in self.rooms[room_name]["players"]:
-                    await self.send(id,"game_end",{"winner":winner})
+                    await self.send(id,"end_game",{"winner":winner})
                 
 
 
