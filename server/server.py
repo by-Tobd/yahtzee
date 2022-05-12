@@ -43,6 +43,7 @@ class Server:
         self.players[id]["roll_times"] = 0
         self.players[id]["username"] = None
         self.players[id]["room"] = None
+        self.players[id]["final_score"] = None
         await websocket.send(json.dumps({"type":"player_id", "data":id}))
 
         # Prüft die Verbindung des Spielers.
@@ -104,10 +105,14 @@ class Server:
         """Syntaktisch Notwendig!"""
         await self.leave_room(sender_id)
 
-    #TODO: Add yahtzee check and different behaviour
     async def end_turn(self, row, sender_id) -> None:
         """Trägt die Punkte eines Spielers ein und sendet den neuen Stand an alle.
         Wenn der Spieler noch nicht gerollt hat oder die Punkte nicht eintragen kann, wird ihm eine Wahnung geschickt."""
+
+        if self.players[sender_id]["final_score"]:
+            await self.send(sender_id, "warning", "finished")
+            return
+
         if not self.players[sender_id]["roll_times"] > 0:
             await self.send(sender_id, "warning", "not_rolled")
             return
@@ -129,6 +134,26 @@ class Server:
         data = {"player":self.players[sender_id]["username"], "score":self.players[sender_id]["score"]}
         for player in self.rooms[room_name]["players"]:
             await self.send(player, "score_update", data)
+
+
+        if -1 not in self.players[sender_id]["score"]:
+            data = {"player":sender_id,"uppersum":yahtzee.uppersum(self.players[sender_id]["score"])}
+            data["total"] = data["uppersum"] + yahtzee.lowersum(self.players[sender_id]["score"])
+
+            self.players[sender_id]["finished"] = data["uppersum"] + data["lowersum"]
+            await self.send(sender_id, "finished_update", data)
+
+            room_name = self.players[sender_id]["room"]
+            room_scores = [self.players[id]["final_score"] for id in self.rooms[room_name]["players"]]
+            if None not in room_scores:
+                winner_score = max(room_scores)
+                for id in self.rooms[room_name]["players"]:
+                    if self.players[id]["final_score"] == winner_score:
+                        winner = self.players[id]["username"]
+                for id in self.rooms[room_name]["players"]:
+                    await self.send(id,"game_end",{"winner":winner})
+                
+
 
 
     async def update_room(self, room_name) -> None:
@@ -209,7 +234,6 @@ class Server:
         self.rooms[room_name]["players"].append(player_id)
         self.players[player_id]["room"] = room_name
 
-        await self.send(player_id, "joined_room", data)
         await self.update_room(room_name)        
 
 
@@ -248,7 +272,7 @@ if __name__ == "__main__":
     main()
 
     rooms = {"room_name":{"players":[132]}}
-    players = {id:{"socket":"websocket", "score":[i for i in range(14)],"rolls":[i for i in range(5)],"roll_times":0,"username":"str","room":"str"}}
+    players = {id:{"socket":"websocket", "score":[i for i in range(14)],"rolls":[i for i in range(5)],"roll_times":0,"username":"str","room":"str","final_score":700}}
 
     #Recieve
     roll = {"type":"roll", "data":[0,1,3]}
@@ -263,6 +287,8 @@ if __name__ == "__main__":
     roll_update = {"type":"roll_update", "data":{"player":"Omega", "dice":[1,3,5,1,2]}}
     score_update = {"type":"score_update", "data":{"player":"Jerry", "score":[-1,-1,3,6,1,-1,2,23,-1,-1,-1,-1,-1,0]}}
     room_update = {"type":"room_update", "data":{"name":"Test Room", "players":[{"name":"Omega", "score":[-1,-1,3,6,1,-1,2,23,-1,-1,-1,-1,-1,0], "dice":[1,3,5,1,2]}]}}
+    finish_update = {"type":"finish_update","data":{"player":"Tobd","uppersum":123,"total":444}}
+    end_game = {"type":"end_game","data":{"winner":"Tobd"}}
 
     warnings = [
         {"type":"warning", "data":"maximum_rolls"},
@@ -274,13 +300,8 @@ if __name__ == "__main__":
         {"type":"warning", "data":"username_already_in_room"},
         {"type":"warning", "data":"room_does_not_exists"},
         {"type":"warning", "data":"invalid_room_name"},
-        {"type":"warning", "data":"already_in_room"}
+        {"type":"warning", "data":"already_in_room"},
+        {"type":"warning", "data":"finished"}
     ]
 
     room_list = {"type":"room_list", "data":[{"name":"Test Room", "players":2}, {"name":"Test Room 2", "players":1}]}
-    joined_room = {"type":"joined_room", "data":{"name":"Test Room", "players":[{"name":"Omega", "score":[-1,-1,3,6,1,-1,2,23,-1,-1,-1,-1,-1,0], "dice":[1,3,5,1,2]}]}}
-
-"""
-Todo:
--game end
-"""
