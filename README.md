@@ -13,22 +13,21 @@ Null dabei...
 
 
 ## Spielverlauf
-Die Spieler sind reihum einmal pro Runde mit
-dem Würfeln an der Reihe. Dabei können sie bis
+Jeder Spieler darf pro Runde bis
 zu dreimal würfeln. Der erste Wurf erfolgt mit
 allen fünf Würfeln.
 Danach kann der Spieler sich entscheiden, mit
 wie vielen Würfeln er beim 2. und 3. Versuch
-würfeln möchte. Dabei lässt er die Würfel, die er
-behalten möchte, vor sich liegen, und würfelt nur
-mit denen, die ihm „nicht gefallen“. So kann er
-versuchen, sein Ergebnis mit dem 2. und 3.
+würfeln möchte. Dabei klickt er die Würfel an, die er
+noch einmal würfeln möchte und klickt auf den "Roll"-Knopf. 
+So kann er versuchen, sein Ergebnis mit dem 2. und 3.
 Versuch zu verbessern. Er kann aber auch auf
 einen oder beide Zusatzwürfe verzichten. Spätestens 
 nach dem dritten Wurf muss der Spieler
-sein Wurfergebnis in den Yahtzee-Block eintragen
-lassen. Erfüllt der Wurf keine der Bedingungen
-für die Kästchen, wird ein beliebiges Kästchen
+sein Wurfergebnis in den Yahtzee-Block eintragen. 
+Dazu klickt er auf das gewünschte Feld.
+Erfüllt der Wurf keine der Bedingungen
+für die Kästchen, wird das gewählte Kästchen
 „gestrichen“ (= eine Null wird eingetragen).
 
 
@@ -85,32 +84,13 @@ gutschreiben zu lassen. Alle Augen des
 Wurfes werden zusammenaddiert.
 
 ### Zweites, drittes usw. Yahtzee:
-Für jeden zweiten und weiteren Yahtzee trägt
-der Spieler 50 Zusatzpunkte auf der Rückseite
-des Blocks ein. Zusätzlich hat der Spieler zwei
-Möglichkeiten:
-#### Yahtzee als Joker im oberen Feld:
-Der Spieler darf den Wurf in einem beliebigen
-freien oberen Feld mit der entsprechenden
-Höchstpunktzahl eintragen.
-
-Es ist egal, mit welchem Würfelergebnis der
-Yahtzee erzielt wurde. Der Spieler kann sich z. B.
-mit einem 4er Yahtzee auch die Höchstpunktzahl
-25 Punkte im 5er-Feld eintragen.
-
-#### Yahtzee als Joker im unteren Feld:
-Der Spieler darf den Wurf in einem beliebigen
-freien Kästchen im unteren Feld des Blocks mit
-der Höchstpunktzahl einsetzen.
-
-Der Spieler kann sich z. B. 40 Punkte für eine
-große Straße oder 30 Punkte für einen Vierer-
-pasch gutschreiben lassen.
+Für jeden zweiten und weiteren Yahtzee bekommt
+der Spieler 100 Zusatzpunkte. Zusätzlich muss er
+das Gewürfelte Ergebnis in ein des Yahtzee-Blocks eintragen. 
 
 
 ### Beispiel:
-Melanie hat drei Fünfen und zwei Dreien
+Marie hat drei Fünfen und zwei Dreien
 gewürfelt. Sie hat nun vier Möglichkeiten:
 <ul>
     <li> 15 Punkte. Im oberen Teil in ihrem Kästchen für die Fünfen (Die Würfel, die andere Zahlen zeigen, werden nicht gezählt.)
