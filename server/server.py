@@ -22,16 +22,20 @@ class Server:
         self.players = dict()
         self.rooms = dict()
 
-    async def run(self):
+    async def run(self) -> None:
+        """Startet den Server und lässt ihn bis zu einem harten Abschalten laufen.
+        Die Domain ist "localhost" und der Port ist "8765"."""
         async with websockets.serve(self.connected, "localhost", 8765):
             await asyncio.Future()  # run forever
 
-    async def connected(self, websocket:WebSocketServerProtocol):
+    async def connected(self, websocket:WebSocketServerProtocol) -> None:
+        """Fügt einen Spieler zu einem Spiel zu."""
+        # Gibt dem Spieler eine freie Id.
         id = random.randint(0, 10000)
         while id in self.players.keys():
             id = random.randint(0, 10000)
         
-
+        # Initialisiert den Spieler.
         self.players[id] = dict()
         self.players[id]["socket"] = websocket
         self.players[id]["score"] = [0 if i == 13 else -1 for i in range(14)]
@@ -41,6 +45,7 @@ class Server:
         self.players[id]["room"] = None
         await websocket.send(json.dumps({"type":"player_id", "data":id}))
 
+        # Prüft die Verbindung des Spielers.
         try:
             async for message in websocket:
                 await self.handle(message, id)
@@ -50,7 +55,9 @@ class Server:
             await self.leave_room(id)
             del self.players[id]
 
-    async def leave_room(self, id):
+    async def leave_room(self, id) -> None:
+        """Wirft den Spieler der Id "id" raus.
+        Wenn der Raum leer ist wird er geschlossen."""
         room = self.players[id]["room"]
         if room:
             self.rooms[room]["players"].remove(id)
@@ -58,8 +65,8 @@ class Server:
             if len(self.rooms[room]["players"]) == 0:
                 del self.rooms[room]
 
-    async def handle(self, msg, sender_id):
-        print(msg)
+    async def handle(self, msg, sender_id) -> None:
+        """Decodet Daten vom Spieler und gibt Daten in die richtige Weiterverarbeitung."""
         try:
             json_msg = json.loads(msg)
         except json.JSONDecodeError:
@@ -70,12 +77,15 @@ class Server:
             await self.HANDLERS[json_msg["type"]](json_msg["data"], sender_id)
 
 
-    async def send(self, player_id, type:str, data):
+    async def send(self, player_id, type:str, data) -> None:
+        """Encodet Daten und sendet diese an den Spieler."""
         msg = json.dumps({"type":type, "data":data})
         print(f"/\ {msg}")
         await self.players[player_id]["socket"].send(msg)
 
-    async def roll(self, data, sender_id):
+    async def roll(self, data, sender_id) -> None:
+        """Rollt die Würfel des Spielers und sendet diese an den Spieler.
+        Wenn die maximale Anzahl an Würfen erreicht ist, wird eine Warnung an den Spieler gesendet."""
         if self.players[sender_id]["roll_times"] < 3:
             self.players[sender_id]["roll_times"] += 1
             current_rolls = self.players[sender_id]["rolls"]
@@ -90,11 +100,14 @@ class Server:
         else:
             await self.send(sender_id, "warning", "maximum_rolls")
 
-    async def handle_leave(self, data, sender_id):
+    async def handle_leave(self, data, sender_id) -> None:
+        """Syntaktisch Notwendig!"""
         await self.leave_room(sender_id)
 
     #TODO: Add yahtzee check and different behaviour
-    async def end_turn(self, row, sender_id):
+    async def end_turn(self, row, sender_id) -> None:
+        """Trägt die Punkte eines Spielers ein und sendet den neuen Stand an alle.
+        Wenn der Spieler noch nicht gerollt hat oder die Punkte nicht eintragen kann, wird ihm eine Wahnung geschickt."""
         if not self.players[sender_id]["roll_times"] > 0:
             await self.send(sender_id, "warning", "not_rolled")
             return
@@ -118,7 +131,8 @@ class Server:
             await self.send(player, "score_update", data)
 
 
-    async def update_room(self, room_name):
+    async def update_room(self, room_name) -> None:
+        """Läd die Daten aller Spieler und sendet sie an die Spieler."""
         data = dict()
         data["name"] = room_name
         data["players"] = list()
@@ -133,7 +147,9 @@ class Server:
         for player in self.rooms[room_name]["players"]:
             await self.send(player, "room_update", data)
 
-    async def list_rooms(self, _, sender_id):
+    async def list_rooms(self, _, sender_id) -> None:
+        """Gibt dem Spieler die Liste an Spielräumen.
+        Wenn der Spieler bereits in einem Raum ist, wird ihm eine Warnung geschickt."""
         data = list()
 
         for name, room in self.rooms.items():
@@ -142,7 +158,8 @@ class Server:
             data[-1]["players"] = len(room["players"])
         await self.send(sender_id, "room_list", data)
 
-    async def create_room(self, data, sender_id):
+    async def create_room(self, data, sender_id) -> None:
+        """Eröffnet einen Spielraum und lässt den Spieler beitreten."""
         if self.players[sender_id]["room"] != None:
             await self.send(sender_id, "warning", "already_in_room")
             return
@@ -175,7 +192,9 @@ class Server:
 
         await self.send_room_join(data["room_name"], sender_id)
 
-    async def send_room_join(self, room_name, player_id):
+    async def send_room_join(self, room_name, player_id) -> None:
+        """Initiiert den beitretenden Spieler,
+        sendet ihm ihm die Daten des Raumes und schickt allen im Raum die aktuellen Daten."""
         data = dict()
         data["name"] = room_name
         data["players"] = list()
@@ -194,7 +213,8 @@ class Server:
         await self.update_room(room_name)        
 
 
-    async def join_room(self, data, sender_id):
+    async def join_room(self, data, sender_id) -> None:
+        """Lässt Spieler in einen Spielraum beitreten."""
         if self.players[sender_id]["room"] != None:
             await self.send(sender_id, "warning", "already_in_room")
             return
@@ -219,7 +239,7 @@ class Server:
         await self.send_room_join(data["room_name"], sender_id)
             
 
-def main():
+def main() -> None:
     server = Server()
 
     asyncio.run(server.run())
