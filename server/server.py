@@ -139,6 +139,7 @@ class Server:
         if -1 not in self.players[sender_id]["score"]:
             data = {"uppersum":yahtzee.lowersum(self.players[sender_id]["score"]),
                     "lowersum":yahtzee.uppersum(self.players[sender_id]["score"])}
+            data["upper_bonus"] = (data["uppersum"] >= 63)
 
             self.players[sender_id]["finished"] = data["uppersum"] + data["lowersum"]
             await self.send(sender_id, "finished_update", data)
@@ -234,7 +235,6 @@ class Server:
         self.rooms[room_name]["players"].append(player_id)
         self.players[player_id]["room"] = room_name
 
-        await self.send(player_id, "joined_room", data)
         await self.update_room(room_name)        
 
 
@@ -306,10 +306,8 @@ if __name__ == "__main__":
     ]
 
     room_list = {"type":"room_list", "data":[{"name":"Test Room", "players":2}, {"name":"Test Room 2", "players":1}]}
-    joined_room = {"type":"joined_room", "data":{"name":"Test Room", "players":[{"name":"Omega", "score":[-1,-1,3,6,1,-1,2,23,-1,-1,-1,-1,-1,0], "dice":[1,3,5,1,2]}]}}
 
 """
 Todo:
--game end
 -joined room massage to player delete
 """
