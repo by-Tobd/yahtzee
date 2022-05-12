@@ -104,3 +104,28 @@ Das Spiel endet, sobald das letzte Kästchen
 beim letzten Spieler ausgefüllt ist. 
 <br> Der Spieler mit den meisten Punkten
 ist der Sieger.
+
+# Dokumentation
+
+## Entwicklungsablauf
+Zu beginn des Projekts haben wir zunächst die Aufgaben verteilt. Die Spiellogik wurde von Frederik geschrieben, die Serverinfrastruktur von Tobias und das graphische Benutzereingabe (GUI) haben Tobias und Jannik jeweils einen Prototypen entwickelt. Wir haben uns bei der GUI für Tobias' Prototypen entschieden, da das Werkzeug, das er benutzt hat, einfacher zu bedienen ist und wir somit deutlich effizienter arbeiten konnten.
+Wir haben jetzt unsere Teile des Projekts fertiggestellt. 
+Nun mussten wir die Spiellogik über den Server mit der GUI verbinden.
+Abschließend haben wir Features wie das Raumauswählen und die Gewinneranzeige hinzugefügt.
+Die Dokumentation und Spielanleitung wurde nachträglich von Jannik geschrieben.
+
+## Funktionsweise
+Das Spiel funktioniert indem der Server mit dem Spiellogik und dem GUI interagiert.
+Es wird über Websockets im JSON-Format kommuniziert.
+Der Spieler interagiert ausschließlich mit dem GUI.
+<br>Geht der Spieler auf die Website, läd er die GUI und kann einen Raum erstellen (und diesem beitreten) oder einem Raum beitreten. Beim Erstellen des Raums erzeugt der Server ein Objekt, in das die Daten des Spieles eingetragen werden. Wenn der Spieler dem Raum beitritt werden seine Spieldaten dem Raum zugefügt. Nun kann er auf seinem Bildschirm duch das Anklicken von seinen Würfeln, dem Roll-Knopf und seine Punktefelder das Spiel speilen.
+Dabei wird vom Server geschaut ob die Eingaben gültig sind. Wenn dies der Fall ist wird die Eingabe an die Spiellogik weitergegeben, diese gibt dann den entsprechenden Wert zurück (z.B. Punkte oder einen neuen Wurf). Dann von dem von dem Server gespeichert und an alle Spieler des Raumes gesendet.
+Sobalt jeder fertig ist mit dem Ausfüllen seiner Tabelle, wird vom Server gesendet wer der Gewinner ist und die GUI zeigt dies an.
+
+## Verwendete Libraries und Tools
+[Unity](https://unity.com/)
+<br>[LitJSON](https://litjson.net/)
+<br>[NativeWebSocket](https://github.com/endel/NativeWebSocket)
+<br>[websockets](https://pypi.org/project/websockets/)
+
+
