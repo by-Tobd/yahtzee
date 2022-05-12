@@ -137,9 +137,8 @@ class Server:
 
 
         if -1 not in self.players[sender_id]["score"]:
-            data = {"uppersum":yahtzee.lowersum(self.players[sender_id]["score"]),
-                    "lowersum":yahtzee.uppersum(self.players[sender_id]["score"])}
-            data["upper_bonus"] = (data["uppersum"] >= 63)
+            data = {"player":sender_id,"uppersum":yahtzee.uppersum(self.players[sender_id]["score"])}
+            data["total"] = data["uppersum"] + yahtzee.lowersum(self.players[sender_id]["score"])
 
             self.players[sender_id]["finished"] = data["uppersum"] + data["lowersum"]
             await self.send(sender_id, "finished_update", data)
@@ -288,7 +287,7 @@ if __name__ == "__main__":
     roll_update = {"type":"roll_update", "data":{"player":"Omega", "dice":[1,3,5,1,2]}}
     score_update = {"type":"score_update", "data":{"player":"Jerry", "score":[-1,-1,3,6,1,-1,2,23,-1,-1,-1,-1,-1,0]}}
     room_update = {"type":"room_update", "data":{"name":"Test Room", "players":[{"name":"Omega", "score":[-1,-1,3,6,1,-1,2,23,-1,-1,-1,-1,-1,0], "dice":[1,3,5,1,2]}]}}
-    finish_update = {"type":"finish_update","data":{"player":"Tobd","uppersum":123,"upper_bonus":True,"lowersum":321,"total":444}}
+    finish_update = {"type":"finish_update","data":{"player":"Tobd","uppersum":123,"total":444}}
     end_game = {"type":"end_game","data":{"winner":"Tobd"}}
 
     warnings = [
@@ -306,8 +305,3 @@ if __name__ == "__main__":
     ]
 
     room_list = {"type":"room_list", "data":[{"name":"Test Room", "players":2}, {"name":"Test Room 2", "players":1}]}
-
-"""
-Todo:
--joined room massage to player delete
-"""
