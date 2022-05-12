@@ -95,8 +95,8 @@ freien oberen Feld mit der entsprechenden
 Höchstpunktzahl eintragen.
 
 Es ist egal, mit welchem Würfelergebnis der
-Kniffel ® erzielt wurde. Der Spieler kann sich z. B.
-mit einem 4er Kniffel ® auch die Höchstpunktzahl
+Yahtzee erzielt wurde. Der Spieler kann sich z. B.
+mit einem 4er Yahtzee auch die Höchstpunktzahl
 25 Punkte im 5er-Feld eintragen.
 
 #### Yahtzee als Joker im unteren Feld:
