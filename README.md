@@ -86,7 +86,7 @@ Wurfes werden zusammenaddiert.
 ### Zweites, drittes usw. Yahtzee:
 Für jeden zweiten und weiteren Yahtzee bekommt
 der Spieler 100 Zusatzpunkte. Zusätzlich muss er
-das Gewürfelte Ergebnis in ein des Yahtzee-Blocks eintragen. 
+das Gewürfelte Ergebnis in ein Feld des Yahtzee-Blocks eintragen. 
 
 
 ### Beispiel:
