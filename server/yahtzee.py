@@ -1,7 +1,8 @@
 from random import randint
 from collections import Counter
 
-RULES = [
+RULES = [ 
+    # Regel der Spalte
 	lambda x:x.count(1),
 	lambda x:x.count(2)*2,
 	lambda x:x.count(3)*3,
@@ -17,26 +18,27 @@ RULES = [
 	lambda x:sum(x),
 ]
 
-def straight(rolls:list,lenght:int):
+def straight(rolls:list,lenght:int) -> bool:
+	"""Prüft ob "rolls" ein Straße der Länge "length" ist und gibt das Ergebnis als Boolean zurück."""
 	super = set(rolls)
-	for i in range(7-lenght): #6-lenght-1
+	for i in range(7-lenght):
 		if super.issuperset({j+i+1 for j in range(lenght)}):
 			return True
 	return False
 
-def isyahtzee(rolls:list):
+def isyahtzee(rolls:list) -> bool:
+    """Prüft ob "rolls" ein Yahtzee ist und gibt das Ergebnis als Boolean zurück."""
     return rolls.count(rolls[0]) == 5
 
 
-def roll(die:list, index:list):
-	#return type:list 
+def roll(die:list, index:list) -> list:
+	"""Rollt die Würel "die" i wenn der jeweilige Wert in "index" Wahr ist."""
 	for i in index:
 		die[i] = randint(1,6)
 	return die
 
-def points(rolls:list, row:int):
-	#row between 0 and 12
-	#return type:int
+def points(rolls:list, row:int) -> int:
+	"""Berechnet die Punkte für den Wurf "rolls" in der Reihe "rows"."""
 	return RULES[row](rolls) 
 
 def uppersum(score:list):
@@ -45,4 +47,3 @@ def uppersum(score:list):
 
 def lowersum(score:list):
     return sum(score[6:-1]) + score[-1] * 100
-
