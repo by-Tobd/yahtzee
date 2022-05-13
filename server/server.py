@@ -255,7 +255,7 @@ class Server:
             return
 
         for player in self.rooms[data["room_name"]]["players"]:
-            if player["username"] == data["username"]:
+            if self.players[player]["username"] == data["username"]:
                 await self.send(sender_id, "warning", "username_already_in_room")
                 return
 
