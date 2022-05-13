@@ -141,7 +141,8 @@ class Server:
             data["total"] = data["uppersum"] + yahtzee.lowersum(self.players[sender_id]["score"])
 
             self.players[sender_id]["finished"] = data["total"]
-            await self.send(sender_id, "finish_update", data)
+            for player in self.rooms[room_name]["players"]:
+                await self.send(player, "finish_update", data)
 
             room_name = self.players[sender_id]["room"]
             room_scores = [self.players[id]["finished"] for id in self.rooms[room_name]["players"]]
@@ -255,7 +256,7 @@ class Server:
             return
 
         for player in self.rooms[data["room_name"]]["players"]:
-            if player["username"] == data["username"]:
+            if self.players[player]["username"] == data["username"]:
                 await self.send(sender_id, "warning", "username_already_in_room")
                 return
 

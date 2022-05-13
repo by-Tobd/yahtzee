@@ -44,7 +44,7 @@ def points(rolls:list, row:int) -> int:
 def uppersum(score:list) -> int:
     """Berechnet die Punkte der oberen Reihen und rechnet den Bonus ein."""
     total = sum(score[:6]) 
-    return total + (total>63) * 35
+    return total + (total>=63) * 35
 
 def lowersum(score:list) -> int:
     """Berechnet die Punkte der oberen Reihen und rechnet den Bonus ein."""
